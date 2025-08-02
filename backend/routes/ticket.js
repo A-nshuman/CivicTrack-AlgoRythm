@@ -8,13 +8,15 @@ router.get("/", async (req, res) => {
     const long = Number(req.query.long);
     const dist = Number(req.query.dist);
     const category = req.query.category || "";
+    const status = req.query.status || "";
     const title = req.query.title || "";
 
     if (!dist) {
         const ticketList = await tickets.find({
             category,
-            "reports.count": { $lte: 10 }, // Only tickets with 10 or fewer reports
-            title: { $regex: title, $options: "i" } // Case-insensitive search
+            "reports.count": { $lte: 10 },
+            title: { $regex: title, $options: "i" },
+            status
         }).select("-activity -reports");
         return res.json(ticketList.map(ticket => ticket.toJSON()));
     }
@@ -26,9 +28,10 @@ router.get("/", async (req, res) => {
     const ticketList = await tickets.find({
         category,
         title: { $regex: title, $options: "i" },
-        "reports.count": { $lte: 10 }, // Only tickets with 10 or fewer reports
+        "reports.count": { $lte: 10 },
         "coordinates.lat": { $gte: lat - dist, $lte: lat + dist },
-        "coordinates.long": { $gte: long - dist, $lte: long + dist }
+        "coordinates.long": { $gte: long - dist, $lte: long + dist },
+        status
     }).select("-activity -reports");
 
     return res.json(ticketList.map(ticket => ticket.toJSON()));
@@ -52,9 +55,12 @@ router.post("/create", async (req, res) => {
         const session = await sessions.findOne({ _id: sessionId });
         if (!session)
             return res.status(401).json({ error: "Unauthorized" });
+        const user = await users.findOne({ email: session.email });
+        if (user.banned) {
+            return res.status(403).json({ error: "User is banned" });
+        }
         reporter = session.email;
     }
-
 
     if (!title || !description || !reporter)
         return res.status(400).json({ error: "Title, description, and reporter are required" });
@@ -196,7 +202,7 @@ router.put("/update/:id", async (req, res) => {
 
     ticket.activity.push({
         action: "update",
-        user: ticket.reporter, 
+        user: ticket.reporter,
         timestamp: new Date(),
         comment: `Ticket updated by ${ticket.reporter}`,
     });

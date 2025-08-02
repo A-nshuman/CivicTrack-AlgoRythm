@@ -19,6 +19,9 @@ router.post("/login", async (req, res) => {
     if (!user) {
         return res.status(401).json({ error: "Invalid email or password" });
     }
+    if (user.banned) {
+        return res.status(403).json({ error: "User is banned" });
+    }
     const session = await sessions.create({ email: user.email, valid_until: new Date(Date.now() + 3600000) });
     res.cookie("session_id", session._id);
     res.json(user.toJSON());

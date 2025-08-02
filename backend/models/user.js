@@ -19,6 +19,10 @@ const userSchema = new Schema({
         type: String,
         required: true,
     },
+    banned: {
+        type: Boolean,
+        default: false,
+    }
 })
 
 export const users = model("User", userSchema);

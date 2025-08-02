@@ -1,5 +1,5 @@
 import express from "express";
-import { auth, ticket } from "./routes/index.js"
+import { auth, ticket, admin } from "./routes/index.js"
 import config from "../config.js";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
@@ -12,6 +12,7 @@ app.use(cookieParser());
 
 app.use("/auth", auth);
 app.use("/tickets", ticket);
+app.use("/admin", admin);
 
 async function startAPI(
     port = 3000,
