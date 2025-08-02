@@ -57,7 +57,7 @@ router.get("/:id", async (req, res) => {
 })
 
 router.post("/create", upload.array("photos", 5), async (req, res) => {
-    const { title, description, category, anonymous, assignedTo, coordinates } = req.body;
+    const { title, description, category, anonymous, coordinates } = req.body;
     const photos = req.files;
 
     let reporter;
@@ -82,7 +82,6 @@ router.post("/create", upload.array("photos", 5), async (req, res) => {
         title,
         description,
         category,
-        assignedTo,
         coordinates,
         reporter
     });
