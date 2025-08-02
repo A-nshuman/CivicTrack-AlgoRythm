@@ -1,0 +1,45 @@
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+    // Import variables first so they are available everywhere
+    @import 'variables';
+
+    // Base styles for the whole application
+    body {
+      margin: 0;
+      font-family: $font-family;
+      background-color: $background-color;
+      color: $text-color;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    // Main app container styles
+    .app-container {
+      min-height: 100vh;
+    }
+
+    .main-content {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 32px;
+    }
+
+    .page-header {
+      margin-bottom: 32px;
+      h1 {
+        font-size: 2.25rem; // 36px
+        font-weight: 800;
+        letter-spacing: -0.025em;
+        margin: 0;
+      }
+      p {
+        margin-top: 8px;
+        font-size: 1.125rem; // 18px
+        color: $text-color-light;
+      }
+    }
+    

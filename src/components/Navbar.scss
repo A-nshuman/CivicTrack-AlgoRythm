@@ -1,0 +1,74 @@
+    @import '../styles/variables';
+
+    .navbar {
+      background-color: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      height: 64px;
+
+      &__content {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 0 32px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 100%;
+      }
+
+      &__logo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+
+        .logo-icon {
+          height: 32px;
+          width: auto;
+          color: $primary-color;
+        }
+
+        .logo-text {
+          font-size: 1.25rem;
+          font-weight: 700;
+          color: $text-color;
+        }
+      }
+
+      &__actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      &__button {
+        padding: 8px 12px;
+        border-radius: $border-radius;
+        font-size: 0.875rem;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.2s;
+
+        &--login {
+          background-color: transparent;
+          color: $text-color-light;
+          &:hover {
+            background-color: #f3f4f6;
+          }
+        }
+
+        &--register {
+          background-color: $primary-color;
+          color: white;
+          box-shadow: $shadow;
+          &:hover {
+            background-color: $primary-color-dark;
+          }
+        }
+      }
+    }
+    
