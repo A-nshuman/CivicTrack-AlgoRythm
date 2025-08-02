@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { Search, Filter, X } from 'lucide-react';
 import Navbar from './components/Navbar/Navbar.jsx';
 import TicketCard from './components/TicketCard/TicketCard.jsx';
-import './App.scss'; // Import SCSS file
+import './App.scss'; // Import SCSS 
 
 const mockTickets = [
   { id: 1, title: 'Large Pothole on Main St', description: 'A very large and dangerous pothole...', category: 'Roads', status: 'Pending', distance: 1.2, imageUrl: 'https://placehold.co/600x400/f87171/ffffff?text=Pothole', reporter: 'John D.', timestamp: '2024-08-01T10:00:00Z' },
