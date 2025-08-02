@@ -57,6 +57,24 @@ router.get("/unban-user/:email", async (req, res) => {
     res.json({ message: "User unbanned successfully" });
 });
 
+router.get("/stats", async (req, res) => {
+    const totalUsers = await users.countDocuments();
+    const totalTickets = await tickets.countDocuments();
+    const totalResolvedTickets = await tickets.countDocuments({ status: "closed" });
+    const totalOpenTickets = await tickets.countDocuments({ status: "open" });
+    const totalInProgressTickets = await tickets.countDocuments({ status: "in-progress" });
+    const totalBannedUsers = await users.countDocuments({ banned: true });
+
+    res.json({
+        totalUsers,
+        totalTickets,
+        totalResolvedTickets,
+        totalBannedUsers,
+        totalOpenTickets,
+        totalInProgressTickets
+    });
+});
+
 router.get("/banned-users", async (req, res) => {
     const bannedUsers = await users.find({ banned: true }).select("email name").sort({ name: 1 });
     res.json(bannedUsers.map(user => user.toJSON()));

@@ -9,7 +9,8 @@ router.get("/me", async (req, res) => {
     if (!session) {
         return res.status(401).json({ error: "Unauthorized" });
     }
-    const user = await users.findOne({ email: session.email }).select("-password");
+    const user = await users.findOne({ email: session.email });
+    user.password = undefined;
     res.json(user.toJSON());
 })
 

@@ -1,3 +1,4 @@
+import { makeIssueMail, makeUpdateMail, sendEmail } from "../helper/emailservice.js";
 import { users, tickets, sessions } from "../models/index.js";
 import { Router } from "express";
 
@@ -84,6 +85,15 @@ router.post("/create", async (req, res) => {
 
     await newTicket.save();
     res.status(201).json(newTicket.toJSON());
+
+    await sendEmail(
+        makeIssueMail(
+            "noreply@civictrack.org",
+            newTicket.reporter,
+            newTicket.title,
+            newTicket.category
+        )
+    )
 })
 
 router.delete("/delete/:id", async (req, res) => {
@@ -145,6 +155,15 @@ router.put("/set-status/:id", async (req, res) => {
 
     await ticket.save();
     res.json(ticket.toJSON());
+
+    sendEmail(
+        makeUpdateMail(
+            "noreply@civictrack.org",
+            ticket.reporter,
+            ticket.title,
+            ticket.status
+        )
+    )
 })
 
 router.put("/set-location/:id", async (req, res) => {

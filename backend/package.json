@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "cookie-parser": "^1.4.7",
+    "dotenv": "^16.6.1",
     "express": "^5.1.0",
     "mongoose": "^8.17.0",
     "nodemailer": "^7.0.5"
