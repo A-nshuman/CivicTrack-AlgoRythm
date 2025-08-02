@@ -1,0 +1,158 @@
+    @import './styles/variables';
+
+    .filters-panel {
+      background-color: $surface-color;
+      padding: 16px;
+      border-radius: $border-radius;
+      box-shadow: $shadow;
+      margin-bottom: 32px;
+      position: sticky;
+      top: 80px; // navbar height + some space
+      z-index: 30;
+
+      &__container {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+
+        @media (min-width: 768px) {
+          flex-direction: row;
+          align-items: center;
+        }
+      }
+
+      &__search {
+        position: relative;
+        flex-grow: 1;
+
+        .search-icon {
+          position: absolute;
+          left: 12px;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 20px;
+          height: 20px;
+          color: $text-color-light;
+        }
+
+        input {
+          width: 100%;
+          padding: 8px 16px 8px 40px;
+          border: 1px solid $border-color;
+          border-radius: $border-radius;
+          font-size: 1rem;
+          &:focus {
+            outline: none;
+            border-color: $primary-color;
+            box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+          }
+        }
+      }
+
+      &__toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        width: 100%;
+        padding: 8px 16px;
+        border: 1px solid $border-color;
+        border-radius: $border-radius;
+        background-color: $surface-color;
+        cursor: pointer;
+        &:hover {
+          background-color: #f9fafb;
+        }
+        @media (min-width: 768px) {
+          display: none;
+        }
+      }
+
+      &__dropdowns {
+        display: none; // Hidden by default on mobile
+        flex-direction: column;
+        gap: 16px;
+        &.visible {
+          display: flex; // Shown on mobile when toggled
+        }
+        @media (min-width: 768px) {
+          display: flex; // Always shown on desktop
+          flex-direction: row;
+          align-items: center;
+          margin-top: 0;
+        }
+      }
+
+      select {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid $border-color;
+        border-radius: $border-radius;
+        background-color: $surface-color;
+        font-size: 0.875rem;
+        cursor: pointer;
+        &:focus {
+          outline: none;
+          border-color: $primary-color;
+        }
+        @media (min-width: 768px) {
+          width: auto;
+        }
+      }
+      
+      &__clear-btn {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 0.875rem;
+          color: $text-color-light;
+          background: none;
+          border: none;
+          cursor: pointer;
+          transition: color 0.2s;
+          padding: 8px;
+          justify-content: center;
+          &:hover {
+              color: $primary-color;
+          }
+      }
+    }
+
+    .tickets-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 32px;
+
+      @media (min-width: 768px) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      @media (min-width: 1024px) {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .no-results {
+        text-align: center;
+        padding: 64px 16px;
+        background-color: $surface-color;
+        border-radius: $border-radius;
+        box-shadow: $shadow;
+        
+        .icon {
+            width: 48px;
+            height: 48px;
+            color: #d1d5db;
+            margin: 0 auto;
+        }
+        h3 {
+            margin-top: 8px;
+            font-size: 1.125rem;
+            font-weight: 500;
+        }
+        p {
+            margin-top: 4px;
+            font-size: 0.875rem;
+            color: $text-color-light;
+        }
+    }
+    
