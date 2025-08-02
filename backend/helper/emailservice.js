@@ -1,3 +1,5 @@
+import dotenv from "dotenv";
+dotenv.config();
 import nodemailer from "nodemailer";
 
 const username = process.env.EMAIL_USER;
@@ -14,10 +16,10 @@ const transporter = nodemailer.createTransport({
     },
 });
 
-export function makeIssueMail(from, to, issueTitle, category) {
+export function makeIssueMail(recipient, issueTitle, category) {
     return {
         from: '"CivicTrack" <noreply@civictrack.org>',
-        to: "user@example.com",
+        to: recipient,
         subject: "📍 Your Issue Has Been Reported | CivicTrack",
         text:
             "Hello,\n\n" +
@@ -52,10 +54,10 @@ export function makeIssueMail(from, to, issueTitle, category) {
     };
 }
 
-export function makeUpdateMail(from, to, issueTitle, status) {
+export function makeUpdateMail(recipient, issueTitle, status) {
     return {
         from: '"CivicTrack" <noreply@civictrack.org>',
-        to: "user@example.com",
+        to: recipient,
         subject: "🔔 Update on Your Reported Issue | CivicTrack",
         text:
             "Hello,\n\n" +
@@ -92,3 +94,5 @@ export async function sendEmail(mailOptions) {
         console.error("Failed to send email:", error);
     }
 }
+
+sendEmail(makeIssueMail("poddarayush52@gmail.com", "Test Issue", "Environment"));

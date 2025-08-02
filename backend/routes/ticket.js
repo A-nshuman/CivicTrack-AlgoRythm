@@ -98,7 +98,6 @@ router.post("/create", upload.array("photos", 5), async (req, res) => {
 
     await sendEmail(
         makeIssueMail(
-            "noreply@civictrack.org",
             newTicket.reporter,
             newTicket.title,
             newTicket.category
@@ -114,7 +113,7 @@ router.post("/create", upload.array("photos", 5), async (req, res) => {
 
     newTicket.photos = photoUrls;
     newTicket.markModified("photos");
-    newTicket.save();
+    await newTicket.save();
 })
 
 router.delete("/delete/:id", async (req, res) => {

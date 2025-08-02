@@ -1,3 +1,6 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import express from "express";
 import { auth, ticket, admin } from "./routes/index.js"
 import mongoose from "mongoose";
@@ -56,3 +59,5 @@ async function startAPI(
         console.log(`API is running on port ${port}`);
     });
 }
+
+startAPI(process.env.MONGO_SRV);
