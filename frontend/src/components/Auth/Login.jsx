@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import Navbar from '../Navbar/Navbar';
+import { useAuth } from '../../context/AuthContext';
 import './Auth.scss';
 
 const Login = () => {
@@ -12,6 +13,7 @@ const Login = () => {
     const [errors, setErrors] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
+    const { login } = useAuth();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -59,6 +61,12 @@ const Login = () => {
             
             // Simulate API call
             await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            // Login the user using the auth context
+            login({
+                email: formData.email,
+                name: formData.email.split('@')[0], // Just for demo purposes
+            });
             
             // Redirect to home page after successful login
             navigate('/');

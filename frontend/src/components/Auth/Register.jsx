@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import Navbar from '../Navbar/Navbar';
+import { useAuth } from '../../context/AuthContext';
 import './Auth.scss';
 
 const Register = () => {
@@ -14,6 +15,7 @@ const Register = () => {
     const [errors, setErrors] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
+    const { register } = useAuth();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -88,8 +90,14 @@ const Register = () => {
             // Simulate API call
             await new Promise(resolve => setTimeout(resolve, 1000));
             
-            // Redirect to login page after successful registration
-            navigate('/login');
+            // Register the user using the auth context
+            register({
+                name: formData.name,
+                email: formData.email
+            });
+            
+            // Redirect to home page after successful registration
+            navigate('/');
         } catch (error) {
             console.error('Registration error:', error);
             setErrors({ form: 'Registration failed. Please try again.' });

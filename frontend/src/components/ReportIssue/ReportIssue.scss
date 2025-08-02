@@ -1,0 +1,193 @@
+@import '../../styles/variables';
+
+.report-issue-page {
+    min-height: 100vh;
+    background-color: $background-color;
+    
+    .main-content {
+        max-width: 768px;
+        margin: 0 auto;
+        padding: 32px;
+    }
+    
+    .page-header {
+        margin-bottom: 32px;
+        
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: $text-color;
+            margin-bottom: 8px;
+        }
+        
+        p {
+            font-size: 1rem;
+            color: $text-color-light;
+        }
+    }
+    
+    .form-error {
+        margin-bottom: 24px;
+        padding: 12px 16px;
+        background-color: #FEE2E2;
+        border-radius: $border-radius;
+        color: #B91C1C;
+        font-size: 0.875rem;
+    }
+    
+    .report-form {
+        background-color: white;
+        border-radius: $border-radius;
+        padding: 32px;
+        box-shadow: $shadow;
+    }
+    
+    .form-group {
+        margin-bottom: 24px;
+        
+        label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: $text-color;
+            margin-bottom: 8px;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #D1D5DB;
+            border-radius: $border-radius;
+            font-size: 0.875rem;
+            color: $text-color;
+            transition: border-color 0.2s;
+            
+            &:focus {
+                outline: none;
+                border-color: $primary-color;
+                box-shadow: 0 0 0 2px rgba($primary-color, 0.1);
+            }
+            
+            &.error {
+                border-color: #EF4444;
+            }
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+    }
+    
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        
+        @media (max-width: 640px) {
+            grid-template-columns: 1fr;
+        }
+    }
+    
+    .location-input {
+        position: relative;
+        
+        .location-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: $text-color-light;
+        }
+        
+        input {
+            padding-left: 36px;
+        }
+    }
+    
+    .error-message {
+        color: #EF4444;
+        font-size: 0.75rem;
+        margin-top: 4px;
+    }
+    
+    .image-upload {
+        border: 2px dashed #D1D5DB;
+        border-radius: $border-radius;
+        padding: 32px;
+        text-align: center;
+        
+        .file-input {
+            display: none;
+        }
+        
+        .upload-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            color: $text-color-light;
+            
+            &:hover {
+                color: $primary-color;
+            }
+        }
+    }
+    
+    .image-preview {
+        position: relative;
+        width: 100%;
+        border-radius: $border-radius;
+        overflow: hidden;
+        
+        img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .remove-image {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            border-radius: 9999px;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            
+            &:hover {
+                background-color: rgba(0, 0, 0, 0.7);
+            }
+        }
+    }
+    
+    .submit-button {
+        background-color: $primary-color;
+        color: white;
+        border: none;
+        border-radius: $border-radius;
+        padding: 12px 24px;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        width: 100%;
+        transition: background-color 0.2s;
+        
+        &:hover {
+            background-color: $primary-color-dark;
+        }
+        
+        &:disabled {
+            background-color: #9CA3AF;
+            cursor: not-allowed;
+        }
+    }
+}
