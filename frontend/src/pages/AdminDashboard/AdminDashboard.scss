@@ -1,0 +1,126 @@
+@use '../../styles/variables' as *;
+
+.admin-dashboard {
+  padding: 32px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.admin-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 40px;
+  
+  svg {
+    color: $primary-color;
+    margin-bottom: 8px;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin: 0;
+  }
+
+  p {
+    font-size: 1.125rem;
+    color: $text-color-light;
+    margin-top: 4px;
+  }
+}
+
+.admin-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.admin-widget {
+  background-color: $surface-color;
+  border-radius: $border-radius;
+  box-shadow: $shadow;
+  overflow: hidden;
+
+  &.map-widget {
+    @media (min-width: 1024px) {
+      grid-column: span 2; // Make map span full width
+    }
+  }
+}
+
+.widget-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  border-bottom: 1px solid $border-color;
+
+  svg {
+    color: $primary-color;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+  }
+}
+
+.widget-content {
+  padding: 20px;
+
+  &.map-container {
+    height: 500px;
+    padding: 0;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th, td {
+      padding: 12px 8px;
+      text-align: left;
+      border-bottom: 1px solid $border-color;
+    }
+
+    th {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: $text-color-light;
+    }
+
+    td {
+      font-size: 0.9rem;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+    
+    .flags-count {
+      font-weight: 700;
+      text-align: center;
+      font-size: 1rem;
+      color: $primary-color;
+    }
+  }
+}
+
+.loading-state, .error-state {
+    text-align: center;
+    padding: 80px 20px;
+    font-size: 1.2rem;
+    color: $text-color-light;
+}
+
+.error-state {
+    color: #ef4444;
+}
