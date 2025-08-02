@@ -105,6 +105,14 @@
         }
     }
     
+    .location-map {
+        margin-top: 16px;
+        border-radius: $border-radius;
+        overflow: hidden;
+        height: 300px;
+        border: 1px solid #D1D5DB;
+    }
+    
     .error-message {
         color: #EF4444;
         font-size: 0.75rem;

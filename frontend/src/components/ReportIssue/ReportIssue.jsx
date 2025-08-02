@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { MapPin, Upload, X } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import Navbar from '../Navbar/Navbar';
+import MapComponent from '../../MapComponent.jsx';
 import './ReportIssue.scss';
 
 const CATEGORIES = ["Roads", "Lighting", "Water Supply", "Cleanliness", "Public Safety", "Obstructions"];
@@ -197,6 +198,9 @@ const ReportIssue = () => {
                                 />
                             </div>
                             {errors.location && <div className="error-message">{errors.location}</div>}
+                            <div className="location-map">
+                                <MapComponent />
+                            </div>
                         </div>
                     </div>
                     

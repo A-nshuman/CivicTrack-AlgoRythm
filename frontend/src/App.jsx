@@ -1,14 +1,15 @@
 import React, { useState, useMemo } from 'react';
-import { Search, Filter, X } from 'lucide-react';
+import { Search, Filter, X, Map } from 'lucide-react';
 import Navbar from './components/Navbar/Navbar.jsx';
 import TicketCard from './components/TicketCard/TicketCard.jsx';
-import './App.scss'; // Import SCSS 
+import MapComponent from './MapComponent.jsx';
+import './App.scss';
 
 const mockTickets = [
-  { id: 1, title: 'Large Pothole on Main St', description: 'A very large and dangerous pothole...', category: 'Roads', status: 'Pending', distance: 1.2, imageUrl: 'https://placehold.co/600x400/f87171/ffffff?text=Pothole', reporter: 'John D.', timestamp: '2024-08-01T10:00:00Z' },
-  { id: 2, title: 'Streetlight Out at Oak & 3rd', description: 'The streetlight on the corner has been out for 3 days...', category: 'Lighting', status: 'In Progress', distance: 0.8, imageUrl: 'https://placehold.co/600x400/facc15/ffffff?text=Streetlight', reporter: 'Jane S.', timestamp: '2024-07-30T22:15:00Z' },
-  { id: 3, title: 'Overflowing Dumpster', description: 'The public dumpster behind the park is overflowing...', category: 'Cleanliness', status: 'Completed', distance: 2.5, imageUrl: 'https://placehold.co/600x400/4ade80/ffffff?text=Trash', reporter: 'Anonymous', timestamp: '2024-07-29T14:30:00Z' },
-  { id: 4, title: 'Water Leak on Park Ave', description: 'Constant stream of water coming from a crack...', category: 'Water Supply', status: 'Pending', distance: 3.1, imageUrl: 'https://placehold.co/600x400/60a5fa/ffffff?text=Water+Leak', reporter: 'Mike P.', timestamp: '2024-08-02T08:00:00Z' },
+  { id: 1, title: 'Large Pothole on Main St', description: 'A very large and dangerous pothole...', category: 'Roads', status: 'Pending', distance: 1.2, imageUrl: 'https://placehold.co/600x400/f87171/ffffff?text=Pothole', reporter: 'John D.', timestamp: '2024-08-01T10:00:00Z', location: 'Main St & 5th Ave' },
+  { id: 2, title: 'Streetlight Out at Oak & 3rd', description: 'The streetlight on the corner has been out for 3 days...', category: 'Lighting', status: 'In Progress', distance: 0.8, imageUrl: 'https://placehold.co/600x400/facc15/ffffff?text=Streetlight', reporter: 'Jane S.', timestamp: '2024-07-30T22:15:00Z', location: 'Oak & 3rd' },
+  { id: 3, title: 'Overflowing Dumpster', description: 'The public dumpster behind the park is overflowing...', category: 'Cleanliness', status: 'Completed', distance: 2.5, imageUrl: 'https://placehold.co/600x400/4ade80/ffffff?text=Trash', reporter: 'Anonymous', timestamp: '2024-07-29T14:30:00Z', location: 'Central Park' },
+  { id: 4, title: 'Water Leak on Park Ave', description: 'Constant stream of water coming from a crack...', category: 'Water Supply', status: 'Pending', distance: 3.1, imageUrl: 'https://placehold.co/600x400/60a5fa/ffffff?text=Water+Leak', reporter: 'Mike P.', timestamp: '2024-08-02T08:00:00Z', location: 'Park Avenue' },
 ];
 const CATEGORIES = ["Roads", "Lighting", "Water Supply", "Cleanliness", "Public Safety", "Obstructions"];
 const STATUSES = ["Pending", "In Progress", "Completed"];
@@ -18,6 +19,9 @@ export default function App() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState({ status: 'All', category: 'All', distance: 'All' });
   const [isFiltersVisible, setIsFiltersVisible] = useState(false);
+  const [selectedTicket, setSelectedTicket] = useState(null);
+  const [showPopup, setShowPopup] = useState(false);
+  const [isMapOpen, setIsMapOpen] = useState(false); // State for the map popup
 
   const handleFilterChange = (filterType, value) => {
     setFilters(prev => ({ ...prev, [filterType]: value }));
@@ -26,6 +30,15 @@ export default function App() {
   const clearFilters = () => {
     setFilters({ status: 'All', category: 'All', distance: 'All' });
     setSearchTerm('');
+  };
+
+  const handleTicketClick = (ticket) => {
+    setSelectedTicket(ticket);
+    setShowPopup(true);
+  };
+
+  const closePopup = () => {
+    setShowPopup(false);
   };
 
   const filteredTickets = useMemo(() => {
@@ -43,8 +56,14 @@ export default function App() {
       <Navbar />
       <main className="main-content">
         <header className="page-header">
-          <h1>Community Issues</h1>
-          <p>Browse and track civic issues reported by your neighbors.</p>
+          <div className="left">
+            <h1>Community Issues</h1>
+            <p>Browse and track civic issues reported by your neighbors.</p>
+          </div>
+          {/* Add onClick handler to the map button */}
+          <button className='mapBtn' onClick={() => setIsMapOpen(true)}>
+            <Map /> View Map
+          </button>
         </header>
 
         <div className="filters-panel">
@@ -83,13 +102,35 @@ export default function App() {
 
         {filteredTickets.length > 0 ? (
           <div className="tickets-grid">
-            {filteredTickets.map(ticket => <TicketCard key={ticket.id} ticket={ticket} />)}
+            {filteredTickets.map(ticket => <TicketCard key={ticket.id} ticket={ticket} onClick={() => handleTicketClick(ticket)} />)}
           </div>
         ) : (
           <div className="no-results">
             <Search className="icon" />
             <h3>No Issues Found</h3>
             <p>Try adjusting your search or filter criteria.</p>
+          </div>
+        )}
+
+        {/* This is the popup for individual ticket details */}
+        {showPopup && selectedTicket && (
+          <div className="issue-popup-overlay" onClick={closePopup}>
+            <div className="issue-popup" onClick={(e) => e.stopPropagation()}>
+              <button className="close-button" onClick={closePopup}>×</button>
+              {/* ... content for the ticket detail popup ... */}
+            </div>
+          </div>
+        )}
+
+        {/* This is the new popup for the map */}
+        {isMapOpen && (
+          <div className="map-modal-overlay" onClick={() => setIsMapOpen(false)}>
+            <div className="map-modal-content" onClick={(e) => e.stopPropagation()}>
+              <button className="map-modal-close-btn" onClick={() => setIsMapOpen(false)}>
+                <X size={20} />
+              </button>
+              <MapComponent />
+            </div>
           </div>
         )}
       </main>
