@@ -2,12 +2,18 @@ import React from 'react';
 import { MapPin } from 'lucide-react';
 import './TicketCard.scss'; // Import SCSS file
 
-const TicketCard = ({ ticket }) => {
+const TicketCard = ({ ticket, onClick }) => {
     // Helper to create a BEM-compatible class for status
     const statusClass = ticket.status.replace(' ', '-');
 
+    const handleClick = () => {
+        if (onClick) {
+            onClick(ticket);
+        }
+    };
+
     return (
-        <div className="ticket-card">
+        <div className="ticket-card" onClick={handleClick}>
             <div className="ticket-card__image-wrapper">
                 <img
                     className="ticket-card__image"
