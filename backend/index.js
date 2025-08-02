@@ -10,10 +10,12 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
+// Add routers
 app.use("/auth", auth);
 app.use("/tickets", ticket);
 app.use("/admin", admin);
 
+// Set up CORS
 const allowedOrigins = [
   'http://localhost:5173'
 ];
@@ -36,6 +38,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
+// Export function to start the API
 async function startAPI(
     mongo_srv,
     port = 3000
@@ -53,5 +56,3 @@ async function startAPI(
         console.log(`API is running on port ${port}`);
     });
 }
-
-startAPI()

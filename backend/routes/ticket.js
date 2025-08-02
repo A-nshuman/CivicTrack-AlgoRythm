@@ -2,6 +2,16 @@ import { makeIssueMail, makeUpdateMail, sendEmail } from "../helper/emailservice
 import { users, tickets, sessions } from "../models/index.js";
 import { Router } from "express";
 
+import multer from "multer";
+const upload = multer({ dest: 'uploads/' });
+import { v2 as cloudinary } from "cloudinary";
+
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
 const router = Router();
 
 router.get("/", async (req, res) => {
@@ -46,8 +56,10 @@ router.get("/:id", async (req, res) => {
     res.json(ticket.toJSON());
 })
 
-router.post("/create", async (req, res) => {
-    const { title, description, category, anonymous, assignedTo, coordinates, photos } = req.body;
+router.post("/create", upload.array("photos", 5), async (req, res) => {
+    const { title, description, category, anonymous, assignedTo, coordinates } = req.body;
+    const photos = req.files;
+
     let reporter;
 
     if (anonymous) reporter = "anonymous";
@@ -72,7 +84,6 @@ router.post("/create", async (req, res) => {
         category,
         assignedTo,
         coordinates,
-        photos,
         reporter
     });
 
@@ -83,7 +94,6 @@ router.post("/create", async (req, res) => {
         comment: `Ticket created by ${newTicket.reporter}`,
     });
 
-    await newTicket.save();
     res.status(201).json(newTicket.toJSON());
 
     await sendEmail(
@@ -94,6 +104,17 @@ router.post("/create", async (req, res) => {
             newTicket.category
         )
     )
+
+    const photoUrls = [];
+
+    for (const photo of photos) {
+        const uploadResult = await cloudinary.uploader.upload(photo.path);
+        photoUrls.push(cloudinary.url(uploadResult.public_id));
+    }
+
+    newTicket.photos = photoUrls;
+    newTicket.markModified("photos");
+    newTicket.save();
 })
 
 router.delete("/delete/:id", async (req, res) => {
@@ -208,7 +229,7 @@ router.put("/update/:id", async (req, res) => {
         return res.status(403).json({ error: "Forbidden" });
     }
 
-    const { title, description, category, photos } = req.body;
+    const { title, description, category } = req.body;
 
     ticket.category = category || ticket.category;
     if (category && !["roads", "lighting", "obstructions", "public-safety", "cleanliness", "water-supply", "other"].includes(category)) {
@@ -217,7 +238,6 @@ router.put("/update/:id", async (req, res) => {
 
     ticket.title = title || ticket.title;
     ticket.description = description || ticket.description;
-    ticket.photos = photos || ticket.photos;
 
     ticket.activity.push({
         action: "update",
@@ -230,8 +250,7 @@ router.put("/update/:id", async (req, res) => {
         $set: {
             title: ticket.title,
             description: ticket.description,
-            category: ticket.category,
-            photos: ticket.photos
+            category: ticket.category
         }
     });
     res.json(ticket.toJSON());
