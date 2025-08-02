@@ -9,7 +9,8 @@ export const useAuth = () => {
     return useContext(AuthContext);
 };
 
-// Provider component that wraps the app and makes auth object available to any child component that calls useAuth().
+// Provider component that wraps the app and makes the auth object 
+// available to any child component that calls useAuth().
 export const AuthProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -17,11 +18,20 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         // Check if user is logged in from localStorage
-        const user = localStorage.getItem('user');
-        if (user) {
-            setCurrentUser(JSON.parse(user));
+        try {
+            const user = localStorage.getItem('user');
+            // Ensure the user string is not null or the literal string "undefined"
+            if (user && user !== 'undefined') {
+                setCurrentUser(JSON.parse(user));
+            }
+        } catch (error) {
+            console.error("Failed to parse user from localStorage", error);
+            // If parsing fails, it's best to remove the corrupted item
+            localStorage.removeItem('user');
+        } finally {
+            // Set loading to false once we've tried to get the user
+            setLoading(false);
         }
-        setLoading(false);
     }, []);
 
     // Login function
@@ -30,14 +40,14 @@ export const AuthProvider = ({ children }) => {
         // For now, we'll just store the user data in localStorage
         localStorage.setItem('user', JSON.stringify(userData));
         setCurrentUser(userData);
-        return true;
+        return true; // Indicate success
     };
 
     // Logout function
     const logout = () => {
         localStorage.removeItem('user');
         setCurrentUser(null);
-        navigate('/');
+        navigate('/'); // Navigate to home page after logout
     };
 
     // Register function
@@ -46,19 +56,21 @@ export const AuthProvider = ({ children }) => {
         // For now, we'll just store the user data in localStorage
         localStorage.setItem('user', JSON.stringify(userData));
         setCurrentUser(userData);
-        return true;
+        return true; // Indicate success
     };
 
+    // The value that will be supplied to any descendants of this provider
     const value = {
         currentUser,
         login,
         logout,
         register,
-        isAuthenticated: !!currentUser
+        isAuthenticated: !!currentUser // A boolean flag for easy checking
     };
 
     return (
         <AuthContext.Provider value={value}>
+            {/* Don't render children until the loading state is false */}
             {!loading && children}
         </AuthContext.Provider>
     );

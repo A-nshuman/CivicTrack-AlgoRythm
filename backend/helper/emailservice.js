@@ -2,9 +2,9 @@ import nodemailer from "nodemailer";
 
 const username = process.env.EMAIL_USER;
 const password = process.env.EMAIL_PASS;
-if (!username || !password) {
-    throw new Error("Email credentials are not set in environment variables");
-}
+// if (!username || !password) {
+//     throw new Error("Email credentials are not set in environment variables");
+// }
 
 const transporter = nodemailer.createTransport({
     service: "gmail",

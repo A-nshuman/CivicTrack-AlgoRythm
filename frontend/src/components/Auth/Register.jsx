@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import Navbar from '../Navbar/Navbar';
 import { useAuth } from '../../context/AuthContext';
+import AuthService from '../../endpoints/auth';
 import './Auth.scss';
 
 const Register = () => {
@@ -15,7 +16,9 @@ const Register = () => {
     const [errors, setErrors] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
-    const { register } = useAuth();
+    const { login } = useAuth();
+
+    const exist = false;
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -84,17 +87,8 @@ const Register = () => {
         setIsLoading(true);
         
         try {
-            // This would be replaced with actual API call to your backend
-            console.log('Registration form submitted:', formData);
-            
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            
-            // Register the user using the auth context
-            register({
-                name: formData.name,
-                email: formData.email
-            });
+            const data = await AuthService.register(formData.email, formData.password, formData.name);
+            login(data.user);
             
             // Redirect to home page after successful registration
             navigate('/');

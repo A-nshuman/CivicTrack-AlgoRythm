@@ -54,9 +54,7 @@ class TicketsService {
     try {
       const response = await fetch(`${API_BASE_URL}/tickets/create`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: {},
         credentials: 'include',
         body: JSON.stringify(ticketData),
       });

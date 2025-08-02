@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import Navbar from '../Navbar/Navbar';
 import { useAuth } from '../../context/AuthContext';
+import AuthService from '../../endpoints/auth';
 import './Auth.scss';
 
 const Login = () => {
@@ -56,17 +57,8 @@ const Login = () => {
         setIsLoading(true);
         
         try {
-            // This would be replaced with actual API call to your backend
-            console.log('Login form submitted:', formData);
-            
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            
-            // Login the user using the auth context
-            login({
-                email: formData.email,
-                name: formData.email.split('@')[0], // Just for demo purposes
-            });
+            const data = await AuthService.login(formData.email, formData.password);
+            login(data.user);
             
             // Redirect to home page after successful login
             navigate('/');
