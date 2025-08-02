@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Shield, UserX, Flag, Map as MapIcon } from 'lucide-react';
-import { getTickets, banUser } from '../../endpoints/ticket'; // Using the correct functions
+import TicketsService from '../../endpoints/ticket'; // Keep this for fetching tickets
+import AdminService from '../../endpoints/admin'; // Correctly import banUser from admin endpoint
 import MapComponent from '../../MapComponent';
 import './AdminDashboard.scss';
 
@@ -14,7 +15,7 @@ const AdminDashboard = () => {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const ticketsResponse = await getTickets();
+                const ticketsResponse = await TicketsService.getTickets();
                 // Assuming the backend populates the 'reporter' field with user details
                 setTickets(ticketsResponse.data || []);
             } catch (err) {
@@ -42,9 +43,9 @@ const AdminDashboard = () => {
         // A simple browser confirmation before banning
         if (window.confirm(`Are you sure you want to ban the user "${userName}"? This action cannot be undone.`)) {
             try {
-                await banUser(userId);
+                await AdminService.banUser(userId);
                 setFeedback(`User ${userName} has been successfully banned.`);
-                // You might want to refresh the data or update the UI to show the user is banned
+            // You might want to refresh the data or update the UI to show the user is banned
             } catch (err) {
                 setFeedback(`Failed to ban user ${userName}.`);
                 console.error('Ban user error:', err);

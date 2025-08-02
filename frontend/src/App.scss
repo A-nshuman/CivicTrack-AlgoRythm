@@ -1,36 +1,46 @@
-@import './styles/variables';
+@use './styles/variables' as *;
 
-header {
+// Main page header styles
+.page-header {
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+  gap: 16px;
 
-  .left {
-    display: flex;
-    flex-direction: column;
+  h1 {
+    font-size: 2.25rem;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    margin: 0;
   }
-
-  button {
-    border: none;
-    background-color: #4F46E5;
-    border-radius: 5px;
-    padding: 10px 15px;
-    color: whitesmoke;
-    size: 30px;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-
-    &:hover {
-      scale: 1.1;
-    }
+  p {
+    margin-top: 4px;
+    font-size: 1.125rem;
+    color: $text-color-light;
   }
 }
 
+.mapBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background-color: $primary-color;
+  color: white;
+  border: none;
+  border-radius: $border-radius;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: $primary-color-dark;
+  }
+}
+
+// Filter panel styles
 .filters-panel {
   background-color: $surface-color;
   padding: 16px;
@@ -38,15 +48,14 @@ header {
   box-shadow: $shadow;
   margin-bottom: 32px;
   position: sticky;
-  top: 80px; // navbar height + some space
+  top: 80px;
   z-index: 30;
 
   &__container {
     display: flex;
     flex-direction: column;
     gap: 16px;
-
-    @media (min-width: 768px) {
+    @media (min-width: 1024px) {
       flex-direction: row;
       align-items: center;
     }
@@ -55,7 +64,6 @@ header {
   &__search {
     position: relative;
     flex-grow: 1;
-
     .search-icon {
       position: absolute;
       left: 12px;
@@ -65,14 +73,12 @@ header {
       height: 20px;
       color: $text-color-light;
     }
-
     input {
       width: 100%;
       padding: 8px 16px 8px 40px;
       border: 1px solid $border-color;
       border-radius: $border-radius;
       font-size: 1rem;
-
       &:focus {
         outline: none;
         border-color: $primary-color;
@@ -92,30 +98,21 @@ header {
     border-radius: $border-radius;
     background-color: $surface-color;
     cursor: pointer;
-
-    &:hover {
-      background-color: #f9fafb;
-    }
-
-    @media (min-width: 768px) {
-      display: none;
-    }
+    &:hover { background-color: #f9fafb; }
+    @media (min-width: 1024px) { display: none; }
   }
 
   &__dropdowns {
-    display: none; // Hidden by default on mobile
+    display: none;
     flex-direction: column;
     gap: 16px;
-
-    &.visible {
-      display: flex; // Shown on mobile when toggled
-    }
-
-    @media (min-width: 768px) {
-      display: flex; // Always shown on desktop
+    &.visible { display: flex; }
+    @media (min-width: 1024px) {
+      display: flex;
       flex-direction: row;
       align-items: center;
       margin-top: 0;
+      width: auto;
     }
   }
 
@@ -127,17 +124,13 @@ header {
     background-color: $surface-color;
     font-size: 0.875rem;
     cursor: pointer;
-
     &:focus {
       outline: none;
       border-color: $primary-color;
     }
-
-    @media (min-width: 768px) {
-      width: auto;
-    }
+    @media (min-width: 1024px) { width: auto; }
   }
-
+  
   &__clear-btn {
     display: flex;
     align-items: center;
@@ -150,47 +143,37 @@ header {
     transition: color 0.2s;
     padding: 8px;
     justify-content: center;
-
-    &:hover {
-      color: $primary-color;
-    }
+    &:hover { color: $primary-color; }
   }
 }
 
+// Grid for ticket cards
 .tickets-grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 32px;
-
-  @media (min-width: 768px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  @media (min-width: 1024px) {
-    grid-template-columns: repeat(3, 1fr);
-  }
+  @media (min-width: 768px) { grid-template-columns: repeat(2, 1fr); }
+  @media (min-width: 1280px) { grid-template-columns: repeat(3, 1fr); }
 }
 
+// "No results" message styles
 .no-results {
   text-align: center;
   padding: 64px 16px;
   background-color: $surface-color;
   border-radius: $border-radius;
   box-shadow: $shadow;
-
   .icon {
     width: 48px;
     height: 48px;
     color: #d1d5db;
     margin: 0 auto;
   }
-
   h3 {
     margin-top: 8px;
     font-size: 1.125rem;
     font-weight: 500;
   }
-
   p {
     margin-top: 4px;
     font-size: 0.875rem;
@@ -198,185 +181,8 @@ header {
   }
 }
 
-// Issue Popup Styles
+// Styles for the issue detail popup
 .issue-popup-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  padding: 20px;
-}
-
-.issue-popup {
-  background-color: white;
-  border-radius: $border-radius;
-  box-shadow: $shadow-lg;
-  width: 100%;
-  max-width: 800px;
-  max-height: 90vh;
-  overflow-y: auto;
-  position: relative;
-}
-
-.close-button {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  background: none;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-  color: $text-color-light;
-  z-index: 10;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  transition: background-color 0.2s;
-  text-decoration: none;
-
-  &:hover {
-    background-color: #f3f4f6;
-  }
-}
-
-button {
-  text-decoration: none;
-}
-
-.issue-popup-content {
-  padding: 32px;
-}
-
-.issue-popup-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-
-  h2 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: $text-color;
-    margin: 0;
-  }
-}
-
-.issue-popup-image {
-  margin-bottom: 24px;
-  border-radius: $border-radius;
-  overflow: hidden;
-
-  img {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-    max-height: 300px;
-  }
-}
-
-.issue-popup-map {
-  margin-bottom: 24px;
-  border-radius: $border-radius;
-  overflow: hidden;
-
-  h3 {
-    font-size: 1rem;
-    font-weight: 600;
-    color: $text-color;
-    margin-bottom: 12px;
-  }
-
-  .leaflet-container {
-    height: 250px;
-    width: 100%;
-    border-radius: $border-radius;
-    z-index: 1;
-  }
-}
-
-.issue-popup-details {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
-  margin-bottom: 24px;
-  background-color: #f9fafb;
-  padding: 16px;
-  border-radius: $border-radius;
-
-  @media (max-width: 640px) {
-    grid-template-columns: 1fr;
-  }
-}
-
-.detail-item {
-  display: flex;
-  flex-direction: column;
-}
-
-.detail-label {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: $text-color-light;
-  margin-bottom: 4px;
-}
-
-.detail-value {
-  font-size: 0.875rem;
-  color: $text-color;
-}
-
-.issue-popup-description {
-  margin-bottom: 24px;
-
-  h3 {
-    font-size: 1rem;
-    font-weight: 600;
-    color: $text-color;
-    margin-bottom: 8px;
-  }
-
-  p {
-    font-size: 0.875rem;
-    line-height: 1.6;
-    color: $text-color;
-  }
-}
-
-.status-badge {
-  font-size: 0.75rem;
-  font-weight: 500;
-  padding: 4px 8px;
-  border-radius: 9999px;
-
-  &.status-pending {
-    background-color: #FEF3C7;
-    color: #92400E;
-  }
-
-  &.status-in-progress {
-    background-color: #DBEAFE;
-    color: #1E40AF;
-  }
-
-  &.status-completed {
-    background-color: #D1FAE5;
-    color: #065F46;
-  }
-}
-
-// Add these styles to the end of your App.scss file
-
-.map-modal-overlay {
-  // This creates the dark, full-screen background
   position: fixed;
   top: 0;
   left: 0;
@@ -386,20 +192,128 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000; // Ensures it's on top of everything
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.issue-popup {
+  background: $surface-color;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 700px;
+  box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1);
+  position: relative;
+  margin: auto;
+
+  .close-button {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+    background: #f3f4f6;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.5rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    &:hover {
+      background-color: #e5e7eb;
+      transform: rotate(90deg);
+    }
+  }
+}
+
+.issue-popup-content {
+  padding: 24px 32px;
+}
+
+.issue-popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 16px;
+  h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0;
+  }
+}
+
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+  &.status-pending { background-color: $status-pending-bg; color: $status-pending-text; }
+  &.status-in-progress { background-color: $status-progress-bg; color: $status-progress-text; }
+  &.status-completed { background-color: $status-completed-bg; color: $status-completed-text; }
+}
+
+.issue-popup-image {
+  width: 100%;
+  height: 300px;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 24px;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.issue-popup-description, .issue-popup-map {
+  margin-bottom: 24px;
+  h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    border-bottom: 1px solid $border-color;
+    padding-bottom: 8px;
+  }
+  p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: $text-color-light;
+  }
+  .map-container {
+    height: 250px;
+  }
+}
+
+// Styles for the map modal (the big one)
+.map-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(17, 24, 39, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
   backdrop-filter: blur(4px);
   animation: fadeIn 0.3s ease;
 }
 
 .map-modal-content {
-  // This is the white container for the map
   background: white;
   padding: 16px;
   border-radius: 12px;
   width: 90vw;
   height: 85vh;
   max-width: 1200px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1);
   position: relative;
   display: flex;
   flex-direction: column;
@@ -407,7 +321,6 @@ button {
 }
 
 .map-modal-close-btn {
-  // The 'X' close button
   position: absolute;
   top: -15px;
   right: -15px;
@@ -432,25 +345,12 @@ button {
   }
 }
 
-// Keyframe animations for a smooth entry effect
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes slideUp {
-  from {
-    transform: translateY(30px);
-    opacity: 0;
-  }
-
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }

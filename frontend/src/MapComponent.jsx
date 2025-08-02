@@ -74,7 +74,7 @@ const ComplaintsMap = () => {
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
           {/* Header & Filters */}
           <div className="p-6 border-b border-gray-200">
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">Complaints Dashboard</h1>
+            <h1 className="text-3xl font-bold text-gray-900 mb-4"></h1>
             <div className="flex flex-wrap gap-2">
               <button
                 onClick={() => setFilter('all')}

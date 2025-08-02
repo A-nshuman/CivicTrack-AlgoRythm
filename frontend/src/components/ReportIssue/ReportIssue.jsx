@@ -11,7 +11,7 @@ const CATEGORIES = ["Roads", "Lighting", "Water Supply", "Cleanliness", "Public 
 const ReportIssue = () => {
     const { currentUser } = useAuth();
     const navigate = useNavigate();
-    
+
     const [formData, setFormData] = useState({
         title: '',
         description: '',
@@ -19,18 +19,18 @@ const ReportIssue = () => {
         location: '',
         image: null
     });
-    
+
     const [errors, setErrors] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     const [previewImage, setPreviewImage] = useState(null);
-    
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({
             ...prev,
             [name]: value
         }));
-        
+
         // Clear error when user starts typing
         if (errors[name]) {
             setErrors(prev => ({
@@ -39,7 +39,7 @@ const ReportIssue = () => {
             }));
         }
     };
-    
+
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -47,14 +47,14 @@ const ReportIssue = () => {
                 ...prev,
                 image: file
             }));
-            
+
             // Create preview URL
             const reader = new FileReader();
             reader.onloadend = () => {
                 setPreviewImage(reader.result);
             };
             reader.readAsDataURL(file);
-            
+
             // Clear error
             if (errors.image) {
                 setErrors(prev => ({
@@ -64,7 +64,7 @@ const ReportIssue = () => {
             }
         }
     };
-    
+
     const removeImage = () => {
         setFormData(prev => ({
             ...prev,
@@ -72,44 +72,44 @@ const ReportIssue = () => {
         }));
         setPreviewImage(null);
     };
-    
+
     const validateForm = () => {
         const newErrors = {};
-        
+
         if (!formData.title.trim()) {
             newErrors.title = 'Title is required';
         }
-        
+
         if (!formData.description.trim()) {
             newErrors.description = 'Description is required';
         }
-        
+
         if (!formData.category) {
             newErrors.category = 'Category is required';
         }
-        
+
         if (!formData.location.trim()) {
             newErrors.location = 'Location is required';
         }
-        
+
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
-    
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         if (!validateForm()) return;
-        
+
         setIsLoading(true);
-        
+
         try {
             // This would be replaced with actual API call to your backend
             console.log('Issue report submitted:', formData);
-            
+
             // Simulate API call
             await new Promise(resolve => setTimeout(resolve, 1500));
-            
+
             // Show success message and redirect
             alert('Issue reported successfully!');
             navigate('/my-issues');
@@ -120,7 +120,7 @@ const ReportIssue = () => {
             setIsLoading(false);
         }
     };
-    
+
     return (
         <div className="report-issue-page">
             <Navbar />
@@ -129,13 +129,13 @@ const ReportIssue = () => {
                     <h1>Report an Issue</h1>
                     <p>Help improve your community by reporting issues you notice.</p>
                 </header>
-                
+
                 {errors.form && (
                     <div className="error-message form-error">
                         {errors.form}
                     </div>
                 )}
-                
+
                 <form onSubmit={handleSubmit} className="report-form">
                     <div className="form-group">
                         <label htmlFor="title">Issue Title</label>
@@ -150,7 +150,7 @@ const ReportIssue = () => {
                         />
                         {errors.title && <div className="error-message">{errors.title}</div>}
                     </div>
-                    
+
                     <div className="form-group">
                         <label htmlFor="description">Description</label>
                         <textarea
@@ -164,7 +164,7 @@ const ReportIssue = () => {
                         ></textarea>
                         {errors.description && <div className="error-message">{errors.description}</div>}
                     </div>
-                    
+
                     <div className="form-row">
                         <div className="form-group">
                             <label htmlFor="category">Category</label>
@@ -182,7 +182,7 @@ const ReportIssue = () => {
                             </select>
                             {errors.category && <div className="error-message">{errors.category}</div>}
                         </div>
-                        
+
                         <div className="form-group">
                             <label htmlFor="location">Location</label>
                             <div className="location-input">
@@ -198,13 +198,13 @@ const ReportIssue = () => {
                                 />
                             </div>
                             {errors.location && <div className="error-message">{errors.location}</div>}
-                            <div className="location-map">
-                                <MapComponent />
-                            </div>
                         </div>
                     </div>
-                    
+
                     <div className="form-group">
+                        <div className="location-map">
+                            <MapComponent />
+                        </div>
                         <label>Photo (Optional)</label>
                         {!previewImage ? (
                             <div className="image-upload">
@@ -223,9 +223,9 @@ const ReportIssue = () => {
                         ) : (
                             <div className="image-preview">
                                 <img src={previewImage} alt="Preview" />
-                                <button 
-                                    type="button" 
-                                    className="remove-image" 
+                                <button
+                                    type="button"
+                                    className="remove-image"
                                     onClick={removeImage}
                                 >
                                     <X size={16} />
@@ -233,10 +233,10 @@ const ReportIssue = () => {
                             </div>
                         )}
                     </div>
-                    
-                    <button 
-                        type="submit" 
-                        className="submit-button" 
+
+                    <button
+                        type="submit"
+                        className="submit-button"
                         disabled={isLoading}
                     >
                         {isLoading ? 'Submitting...' : 'Submit Report'}
