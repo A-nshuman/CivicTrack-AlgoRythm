@@ -42,7 +42,7 @@ const ticketSchema = new Schema({
         type: [{
             action: {
                 type: String,
-                enum: ["created", "updated", "commented", "closed"],
+                enum: ["create", "update", "status-update", "close"],
                 required: true
             },
             timestamp: {

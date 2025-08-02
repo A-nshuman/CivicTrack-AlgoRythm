@@ -4,9 +4,9 @@ import { Router } from "express";
 const router = Router();
 
 router.get("/", async (req, res) => {
-    const lat = req.query.lat || 0;
-    const long = req.query.long || 0;
-    const dist = req.query.dist || 0;
+    const lat = Number(req.query.lat);
+    const long = Number(req.query.long);
+    const dist = Number(req.query.dist);
     const category = req.query.category || "";
     const title = req.query.title || "";
 
@@ -70,7 +70,7 @@ router.post("/create", async (req, res) => {
     });
 
     newTicket.activity.push({
-        action: "created",
+        action: "create",
         user: newTicket.reporter,
         timestamp: new Date(),
         comment: `Ticket created by ${newTicket.reporter}`,
@@ -101,7 +101,8 @@ router.delete("/delete/:id", async (req, res) => {
     res.json({ message: "Ticket deleted successfully" });
 })
 
-router.put("/update/:id", async (req, res) => {
+router.put("/set-status/:id", async (req, res) => {
+    // Auth
     const sessionId = req.cookies.session_id;
     const session = await sessions.findOne({ _id: sessionId });
     if (!session) {
@@ -114,16 +115,75 @@ router.put("/update/:id", async (req, res) => {
     }
 
     const user = await users.findOne({ email: session.email });
-    if (ticket.reporter !== user.email) {
+    if (user.role !== "admin") {
         return res.status(403).json({ error: "Forbidden" });
     }
 
-    const { title, description, category, coordinates, photos, status } = req.body;
+    // Actual logic
+    const { status } = req.body;
+    if (!status) {
+        return res.status(400).json({ error: "Status is required" });
+    }
 
-    ticket.status = status || ticket.status;
     if (status && !["open", "in-progress", "closed"].includes(status)) {
         return res.status(400).json({ error: "Invalid status" });
     }
+
+    ticket.status = status;
+    ticket.activity.push({
+        action: "status-update",
+        user: user.email,
+        timestamp: new Date(),
+        comment: `Status updated to ${status} by ${user.email}`,
+    });
+
+    await ticket.save();
+    res.json(ticket.toJSON());
+})
+
+router.put("/set-location/:id", async (req, res) => {
+    const sessionId = req.cookies.session_id;
+    const session = await sessions.findOne({ _id: sessionId });
+    if (!session) {
+        return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const ticket = await tickets.findById(req.params.id);
+    if (!ticket) {
+        return res.status(404).json({ error: "Ticket not found" });
+    }
+
+    const user = await users.findOne({ email: session.email });
+    if (ticket.reporter !== user.email && user.role !== "admin") {
+        return res.status(403).json({ error: "Forbidden" });
+    }
+
+    const { lat, long } = req.body.coordinates;
+    if (!lat || !long) {
+        return res.status(400).json({ error: "Coordinates are required" });
+    }
+    ticket.coordinates = { lat, long };
+    await ticket.save();
+    res.json(ticket.toJSON());
+});
+
+router.put("/update/:id", async (req, res) => {
+    const sessionId = req.cookies.session_id;
+    const session = await sessions.findOne({ _id: sessionId });
+    if (!session) {
+        return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const ticket = await tickets.findById(req.params.id);
+    if (!ticket) {
+        return res.status(404).json({ error: "Ticket not found" });
+    }
+
+    if (ticket.reporter !== session.email) {
+        return res.status(403).json({ error: "Forbidden" });
+    }
+
+    const { title, description, category, photos } = req.body;
 
     ticket.category = category || ticket.category;
     if (category && !["roads", "lighting", "obstructions", "public-safety", "cleanliness", "water-supply", "other"].includes(category)) {
@@ -132,17 +192,23 @@ router.put("/update/:id", async (req, res) => {
 
     ticket.title = title || ticket.title;
     ticket.description = description || ticket.description;
-    ticket.coordinates = coordinates || ticket.coordinates;
     ticket.photos = photos || ticket.photos;
 
     ticket.activity.push({
-        action: "updated",
+        action: "update",
         user: ticket.reporter, 
         timestamp: new Date(),
         comment: `Ticket updated by ${ticket.reporter}`,
     });
 
-    await tickets.updateOne({ _id: ticket._id }, { $set: ticket });
+    await tickets.updateOne({ _id: ticket._id }, {
+        $set: {
+            title: ticket.title,
+            description: ticket.description,
+            category: ticket.category,
+            photos: ticket.photos
+        }
+    });
     res.json(ticket.toJSON());
 })
 

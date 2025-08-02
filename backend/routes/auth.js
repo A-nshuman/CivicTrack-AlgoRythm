@@ -25,12 +25,12 @@ router.post("/login", async (req, res) => {
 })
 
 router.post("/register", async (req, res) => {
-    const { email, password } = req.body;
+    const { email, password, name } = req.body;
     const existingUser = await users.findOne({ email });
     if (existingUser) {
         return res.status(409).json({ error: "User already exists" });
     }
-    const user = await users.create({ email, password });
+    const user = await users.create({ email, password, name });
     const session = await sessions.create({ email: user.email, valid_until: new Date(Date.now() + 3600000) });
     res.cookie("session_id", session._id);
     res.json(user.toJSON());
